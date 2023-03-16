@@ -10,11 +10,11 @@ import java.util.Random;
 public class ProcessList {
     private List<Process> list;
 
-    public ProcessList(int numberOfProcesses, int numberOfProcessesAtStart, int arrivalTimeRange, int doingTimeRange) {
-        if(numberOfProcesses <= 0) {
-            numberOfProcesses = 1;
+    public ProcessList(int numberOfProcesses, int numberOfProcessesAtStart, int arrivalTimeRange, int doingTimeRange, int mostAtPoint, int whatRangeFor70Percent) {
+        if(numberOfProcesses < 0) {
+            numberOfProcesses = 0;
         }
-        if(numberOfProcessesAtStart <= 0) {
+        if(numberOfProcessesAtStart < 0) {
             numberOfProcessesAtStart = 0;
         }
         list = new ArrayList<>(numberOfProcesses);
@@ -22,11 +22,11 @@ public class ProcessList {
         Random random = new Random();
 
         for(int i = 0; i < numberOfProcessesAtStart; i++) {
-            addProcess(0, doingTimeRange, random);
+            addProcess(0, doingTimeRange, mostAtPoint, whatRangeFor70Percent, random);
         }
 
         for(int i = numberOfProcessesAtStart; i < numberOfProcesses; i++) {
-            addProcess(arrivalTimeRange, doingTimeRange, random);
+            addProcess(arrivalTimeRange, doingTimeRange, mostAtPoint, whatRangeFor70Percent, random);
         }
     }
 
@@ -56,7 +56,7 @@ public class ProcessList {
     public void addProcess(Process process) {
         list.add(process);
     }
-    public void addProcess(int arrivalTimeRange, int doingTimeRange, Random random) {
+    public void addProcess(int arrivalTimeRange, int doingTimeRange, int mostAtPoint, int whatRangeFor70Percent, Random random) {
         int arrivalTime, doingTime;
 
         doingTime = (int) Math.round(MathForProject.getRandomWithStandardDistribution(1, 40, doingTimeRange, 200));
