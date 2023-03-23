@@ -21,6 +21,11 @@ public class RoundRobin implements Strategy {
         this.timeQuant = timeQuant;
     }
 
+    @Override
+    public Process getCurrentProcess() {
+        return currentProcess;
+    }
+
 
     @Override
     public void setProcessor(Processor processor) {
@@ -31,16 +36,16 @@ public class RoundRobin implements Strategy {
     }
 
     @Override
-    public void stepProcess() {
+    public void calculateCurrentProcess() {
         if(currentIndexInList >= processor.getDoingList().getNumberOfProcesses()) {
             currentIndexInList = 0;
+            currentTimeInQuant = 0;
         }
 
         currentProcess = processor.getDoingList().getProcess(currentIndexInList);
-        currentProcess.doOneStep(processor.getSelfTimer());
 
         currentTimeInQuant ++;
-        if(currentProcess.getTimeLeft() == 0) {
+        if(currentProcess.getTimeLeft() == 1) {
             currentTimeInQuant = 0;
             // index in list should not change in this case, because this place will have new process - current one will be removed
         }

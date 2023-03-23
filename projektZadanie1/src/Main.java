@@ -8,17 +8,31 @@ import ProcessorSimulator.Strategy.SJFNormal;
 
 public class Main {
     public static void main(String[] args) {
-        ProcessList processList = new ProcessList(
-                10000,
-                40,
-                1000,
-                100,
-                20,
-                40);
-//        ProcessList processList = new ProcessList(0, 0, 1000000, 1000000);
-        Processor processor;
+        //initialising variables
 
-        processList.addProcess(new Process(2, 200));
+        int numberOfProcesses = 10000;
+        int numberOfProcessesAtStart = 40;
+        int arrivalTimeRange = 100000;
+        int doingTimeRange = 100;
+        int mostAtPoint = 20;
+        int whatRangeFor70Percent = 25;
+
+        int roundRobinTimeQuant = 30;
+
+        ProcessList processList = new ProcessList(
+                numberOfProcesses,
+                numberOfProcessesAtStart,
+                arrivalTimeRange,
+                doingTimeRange,
+                mostAtPoint,
+                whatRangeFor70Percent);
+
+
+        //processList.saveToFile("..\\savedProcesses.txt");
+
+        //----------------------------------------------------------------------------------
+        //initialising processor and running all processes
+        Processor processor;
 
         processor = new Processor(processList, new FCFS());
         processor.runAllProcesses();
@@ -32,10 +46,8 @@ public class Main {
         processor.runAllProcesses();
         processor.showStatistics();
 
-        processor = new Processor(processList, new RoundRobin(50));
+        processor = new Processor(processList, new RoundRobin(roundRobinTimeQuant));
         processor.runAllProcesses();
         processor.showStatistics();
-
-
     }
 }

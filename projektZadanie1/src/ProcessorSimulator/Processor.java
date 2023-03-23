@@ -3,6 +3,9 @@ package ProcessorSimulator;
 import MathForProject.Average;
 import ProcessorSimulator.Strategy.Strategy;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+
 public class Processor {
     private int selfTimer;
     private int howManySwithes;
@@ -27,11 +30,14 @@ public class Processor {
     public void runAllProcesses() {
         while(doingProcesses.getNumberOfProcesses() != 0 || waitingProcesses.getNumberOfProcesses() != 0) {
             if(doingProcesses.getNumberOfProcesses() != 0) {
-                strategy.stepProcess();
+                strategy.calculateCurrentProcess();
+                strategy.getCurrentProcess().doOneStep(selfTimer);
+
+                doingProcesses.swithOfChanged();
+                moveProcessesFromDoingToDone();
             }
 
             selfTimer++;
-            moveProcessesFromDoingToDone();
             moveProcessesFromWaitingToDoing();
         }
     }
@@ -55,13 +61,11 @@ public class Processor {
     }
 
     public void moveProcessesFromDoingToDone() {
-        for(int i = 0; i < doingProcesses.getNumberOfProcesses(); i++) {
-            if(doingProcesses.getProcess(i).getTimeLeft() == 0) {
-                Process process = doingProcesses.getProcess(i);
-                doneProcesses.addProcess(process);
-                doingProcesses.removeProcess(process);
-                i--;
-            }
+        Process process = strategy.getCurrentProcess();
+
+        if(process != null && process.getTimeLeft() == 0) {
+            doneProcesses.addProcess(process);
+            doingProcesses.removeProcess(process);
         }
     }
 
@@ -76,9 +80,9 @@ public class Processor {
     public void showStatistics() {
         System.out.print("\n\n");
         System.out.println(strategy.toString());
-        System.out.println("Self timer: " + selfTimer);
-        System.out.println("How many switches: " + howManySwithes);
-        System.out.println("How many processes: " + doneProcesses.getNumberOfProcesses());
+        showValue("Self timer: ", selfTimer);
+        showValue("How many switches: ", howManySwithes);
+        showValue("How many processes: ", doneProcesses.getNumberOfProcesses());
 
         Process process;
         Average averageWaitingTime = new Average();
@@ -109,11 +113,38 @@ public class Processor {
                 maximumWaitingTimeBeforeFirstTry = waitingTimeBeforeFirstTryTMP;
             }
         }
-        System.out.printf("Average waiting time: %.2f\n", averageWaitingTime.getValue());
-        System.out.printf("Average waiting time before first try: %.2f\n", averageWaitingTimeBeforeFirstTry.getValue());
-        System.out.printf("Average doing time: %.2f\n", averageDoingTime.getValue());
-        System.out.println("Maximum waiting time: " + maximumWaitingTime);
-        System.out.println("Maximum waiting time before first try: " + maximumWaitingTimeBeforeFirstTry);
-        System.out.println("Maximum doing time: " + maximumDoingTime);
+
+        showValue("Average waiting time: ", averageWaitingTime.getValue());
+        showValue("Average waiting time before first try: ", averageWaitingTimeBeforeFirstTry.getValue());
+        showValue("Average doing time: ", averageDoingTime.getValue());
+        showValue("Maximum waiting time: ", maximumWaitingTime);
+        showValue("Maximum waiting time before first try: ", maximumWaitingTimeBeforeFirstTry);
+        showValue("Maximum doing time: ", maximumDoingTime);
+    }
+
+    public void showValue(String text, int value) {
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+        symbols.setDecimalSeparator('.');
+        symbols.setGroupingSeparator(' ');
+
+        DecimalFormat noDecimalsFormat = new DecimalFormat();
+        noDecimalsFormat.setDecimalFormatSymbols(symbols);
+        noDecimalsFormat.setGroupingSize(3);
+        noDecimalsFormat.setMaximumFractionDigits(0);
+
+        System.out.println(text + noDecimalsFormat.format(value));
+    }
+
+    public void showValue(String text, double value) {
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+        symbols.setDecimalSeparator('.');
+        symbols.setGroupingSeparator(' ');
+
+        DecimalFormat decimalFormat = new DecimalFormat();
+        decimalFormat.setDecimalFormatSymbols(symbols);
+        decimalFormat.setGroupingSize(3);
+        decimalFormat.setMaximumFractionDigits(2);
+
+        System.out.println(text + decimalFormat.format(value));
     }
 }

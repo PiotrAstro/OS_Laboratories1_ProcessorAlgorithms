@@ -13,15 +13,19 @@ public class FCFS implements Strategy{
 
 
     @Override
+    public Process getCurrentProcess() {
+        return currentProcess;
+    }
+
+    @Override
     public void setProcessor(Processor processor) {
         this.processor = processor;
         previousProcess = null;
     }
 
     @Override
-    public void stepProcess() {
+    public void calculateCurrentProcess() {
         currentProcess = processor.getDoingList().getProcess(0);
-        currentProcess.doOneStep(processor.getSelfTimer());
 
         if(currentProcess != previousProcess) {
             processor.newSwitch();

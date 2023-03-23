@@ -19,10 +19,17 @@ public class SJFExpropration implements Strategy{
     }
 
     @Override
-    public void stepProcess() {
-        processor.getDoingList().sortProcesses(new SJFNormal.ComparatorByTimeLeft());
+    public Process getCurrentProcess() {
+        return currentProcess;
+    }
+
+    @Override
+    public void calculateCurrentProcess() {
+        if(processor.getDoingList().getRecentlyChanged()) {
+            processor.getDoingList().sortProcesses(new SJFExpropration.ComparatorByTimeLeft());
+        }
+
         currentProcess = processor.getDoingList().getProcess(0);
-        currentProcess.doOneStep(processor.getSelfTimer());
 
         if(currentProcess != previousProcess) {
             processor.newSwitch();

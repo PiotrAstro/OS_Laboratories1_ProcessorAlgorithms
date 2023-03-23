@@ -18,17 +18,16 @@ public class SJFNormal implements Strategy {
     }
 
     @Override
-    public void stepProcess() {
-        if(currentProcess == null) {
+    public Process getCurrentProcess() {
+        return currentProcess;
+    }
+
+    @Override
+    public void calculateCurrentProcess() {
+        if(currentProcess == null || currentProcess.getTimeLeft() == 0) {
             processor.getDoingList().sortProcesses(new ComparatorByTimeLeft());
             currentProcess = processor.getDoingList().getProcess(0);
             processor.newSwitch();
-        }
-
-        currentProcess.doOneStep(processor.getSelfTimer());
-
-        if(currentProcess.getTimeLeft() == 0) {
-            currentProcess = null;
         }
     }
 

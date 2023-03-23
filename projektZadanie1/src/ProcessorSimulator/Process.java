@@ -48,4 +48,8 @@ public class Process {
     public int getTimeLeft() {
         return timeLeft;
     }
+
+    public String toString() {
+        return arrivalTime + "; " + initialTimeLeft;
+    }
 }
