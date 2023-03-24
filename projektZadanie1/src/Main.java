@@ -11,13 +11,13 @@ public class Main {
         //initialising variables
 
         int numberOfProcesses = 10000;
-        int numberOfProcessesAtStart = 40;
-        int arrivalTimeRange = 100000;
+        int numberOfProcessesAtStart = 0;
+        int arrivalTimeRange = 1000000;
         int doingTimeRange = 100;
-        int mostAtPoint = 20;
-        int whatRangeFor70Percent = 25;
+        int mostAtPoint = 10;
+        int whatRangeFor70Percent = 10;
 
-        int roundRobinTimeQuant = 30;
+        int roundRobinTimeQuant = 20;
 
         ProcessList processList = new ProcessList(
                 numberOfProcesses,
@@ -26,6 +26,7 @@ public class Main {
                 doingTimeRange,
                 mostAtPoint,
                 whatRangeFor70Percent);
+        processList.addProcess(new Process(0, 100000));
 
 
         //processList.saveToFile("..\\savedProcesses.txt");

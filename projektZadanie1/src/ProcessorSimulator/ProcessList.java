@@ -76,8 +76,7 @@ public class ProcessList {
         arrivalTime = (int) Math.round(random.nextDouble() * arrivalTimeRange);
 
         Process process = new Process(arrivalTime, doingTime);
-        list.add(process);
-        recentlyChanged = true;
+        addProcess(process);
     }
 
     public void swithOfChanged() {
